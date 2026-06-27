@@ -451,7 +451,7 @@ function AppShell({ auth }) {
           {page === "reports" && <ReportsPage transactions={transactions} investments={investments} budgets={budgets} funders={funders} categories={categories} projects={projects} />}
           {page === "audit" && <AuditPage logs={auditLogs} users={users} />}
           {page === "users" && isAdmin && <UsersPage users={users} setUsers={setUsers} currentUserId={currentUser.id} />}
-          {page === "params" && <ParamsPage funders={funders} setFunders={setFunders} projects={projects} setProjects={setProjects} costCenters={costCenters} categories={categories} subcategoriesMap={subcategoriesMap} bankAccounts={bankAccounts} />}
+          {page === "params" && <ParamsPage funders={funders} setFunders={setFunders} projects={projects} setProjects={setProjects} costCenters={costCenters} setCostCenters={setCostCenters} categories={categories} subcategoriesMap={subcategoriesMap} bankAccounts={bankAccounts} setBankAccounts={setBankAccounts} />}
         </div>
       </div>
       <ToastManager />
@@ -1837,7 +1837,7 @@ function InviteUserForm({ onClose }) {
 }
 
 // ─── PARAMS PAGE ──────────────────────────────────────────────────────────────
-function ParamsPage({ funders, setFunders, projects, setProjects, costCenters, categories, subcategoriesMap, bankAccounts }) {
+function ParamsPage({ funders, setFunders, projects, setProjects, costCenters, setCostCenters, categories, subcategoriesMap, bankAccounts, setBankAccounts }) {
   const [activeTab, setActiveTab] = useState("financiadores");
 
   const tabs = [
@@ -1934,14 +1934,15 @@ function ParamsPage({ funders, setFunders, projects, setProjects, costCenters, c
 
           {activeTab === "centros" && (
             <div>
-              <div className="card-header"><div className="card-title">Centros de custo</div></div>
-              <div className="table-wrap">
-                <table>
-                  <thead><tr><th>Código</th><th>Nome</th></tr></thead>
-                  <tbody>{costCenters.map(c => (<tr key={c.id}><td className="mono">{c.id}</td><td>{c.name}</td></tr>))}</tbody>
-                </table>
-              </div>
-            </div>
+             <div className="card-header">
+              <div className="card-title">Centros de custo</div>
+              <button className="btn btn-primary btn-sm" onClick={() => {
+              const name = prompt("Nome do centro de custo:");
+              if (!name) return;
+              setCostCenters(prev => [...prev, { id: "CC" + String(prev.length + 1).padStart(3, "0"), name }]);
+              showToast("Centro de custo adicionado!");
+            }}><Icon name="plus" size={13} /> Adicionar</button>
+          </div>
           )}
 
           {activeTab === "categorias" && (
@@ -1963,16 +1964,19 @@ function ParamsPage({ funders, setFunders, projects, setProjects, costCenters, c
             </div>
           )}
 
-          {activeTab === "contas" && (
-            <div>
-              <div className="card-header"><div className="card-title">Contas bancárias</div></div>
-              <div className="table-wrap">
-                <table>
-                  <thead><tr><th>Código</th><th>Banco / Conta</th><th>Financiador vinculado</th></tr></thead>
-                  <tbody>{bankAccounts.map(a => (<tr key={a.id}><td className="mono">{a.id}</td><td>{a.name}</td><td><span className="chip badge-blue">{a.funderId}</span></td></tr>))}</tbody>
-                </table>
-              </div>
-            </div>
+         {activeTab === "contas" && (
+          <div>
+            <div className="card-header">
+              <div className="card-title">Contas bancárias</div>
+              <button className="btn btn-primary btn-sm" onClick={() => {
+              const name = prompt("Nome do banco / conta:");
+              if (!name) return;
+              const funderId = prompt("Código do financiador vinculado (ex: FIN001):");
+              if (!funderId) return;
+              setBankAccounts(prev => [...prev, { id: "BC" + String(prev.length + 1).padStart(3, "0"), name, funderId }]);
+              showToast("Conta bancária adicionada!");
+            }}><Icon name="plus" size={13} /> Adicionar</button>
+          </div>
           )}
         </div>
       </div>
