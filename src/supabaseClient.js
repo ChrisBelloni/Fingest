@@ -4,9 +4,8 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error(
-    "Variaveis VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY nao configuradas. " +
-    "Configure-as no arquivo .env (local) ou nas Environment Variables do projeto na Vercel."
+  throw new Error(
+    "As variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY não foram configuradas."
   );
 }
 
