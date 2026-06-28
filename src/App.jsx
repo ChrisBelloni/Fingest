@@ -1910,8 +1910,22 @@ function ParamsPage({ funders, setFunders, projects, setProjects, costCenters, s
             <div>
               <div className="card-header">
                 <div className="card-title">Projetos cadastrados</div>
-                <button className="btn btn-primary btn-sm"><Icon name="plus" size={13} /> Adicionar projeto</button>
-              </div>
+                <button className="btn btn-primary btn-sm" onClick={() => {
+                  const name = prompt("Nome do projeto:");
+                  if (!name) return;
+                  const funderId = prompt("Código do financiador vinculado (ex: FIN001):");
+                  if (!funderId) return;
+                  setProjects(prev => [...prev, {
+                      id: "PRJ" + String(prev.length + 1).padStart(3, "0"),
+                      name,
+                      funderId,
+                      start: new Date().toISOString().split("T")[0],
+                      end: "",
+                      status: "Ativo"
+                    }]);
+                  showToast("Projeto adicionado!");
+                  }}><Icon name="plus" size={13} /> Adicionar projeto</button>
+              </div>  
               <div className="table-wrap">
                 <table>
                   <thead><tr><th>Código</th><th>Nome</th><th>Financiador</th><th>Início</th><th>Término</th><th>Status</th></tr></thead>
